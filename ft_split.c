@@ -6,7 +6,7 @@
 /*   By: iorsini- <iorsini-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 16:39:23 by iorsini-          #+#    #+#             */
-/*   Updated: 2025/04/21 14:08:41 by iorsini-         ###   ########.fr       */
+/*   Updated: 2025/04/21 17:30:23 by iorsini-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,15 @@ static size_t	ft_count_words(const char *s, char c)
 	return (count);
 }
 
-static void	ft_free(char **s, size_t current_word)
+static void	ft_free(char **s)
 {
-	while (current_word > 0)
+	int	i;
+
+	i = 0;
+	while (s[i])
 	{
-		free(s[current_word]);
-		current_word--;
+		free(s[i]);
+		i++;
 	}
 	free(s);
 }
@@ -46,23 +49,25 @@ static char	**ft_filler(char const *s, char c, size_t count_words, char **split)
 
 	i = 0;
 	current_word = 0;
-	while (s[i] && (current_word < count_words))
+	while (s[i] && current_word < count_words)
 	{
-		word_len = 0;
 		while (s[i] == c)
 			i++;
-		while (s[i] != c)
+		word_len = 0;
+		while (s[i] && s[i] != c)
 		{
 			word_len++;
 			i++;
 		}
-		split[current_word] = ft_substr(s, (i - word_len), word_len);
-		if (!split[current_word])
-			return (ft_free(split, current_word), NULL);
-		current_word++;
+		if (word_len > 0)
+		{
+			split[current_word] = ft_substr(s, i - word_len, word_len);
+			if (!split[current_word])
+				return (ft_free(split), NULL);
+			current_word++;
+		}
 	}
-	split[current_word] = (NULL);
-	return (split);
+	return (split[current_word] = NULL, split);
 }
 
 char	**ft_split(char const *s, char c)
