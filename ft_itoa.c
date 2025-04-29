@@ -37,6 +37,7 @@ char	*ft_itoa(int n)
 	char	*str;
 	int		digits;
 	long	nb;
+	int		start;
 
 	nb = n;
 	digits = ft_count_digits(n);
@@ -44,13 +45,16 @@ char	*ft_itoa(int n)
 	if (!str)
 		return (NULL);
 	str[digits] = '\0';
+	start = 0;
 	if (nb < 0)
 	{
 		str[0] = '-';
 		nb = -nb;
+		start = 1;
 	}
-	while (digits-- > (n < 0))
+	while (digits > start)
 	{
+		digits--;
 		str[digits] = (nb % 10) + '0';
 		nb = nb / 10;
 	}
